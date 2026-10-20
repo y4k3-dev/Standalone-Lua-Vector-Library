@@ -1,0 +1,36 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    name: Lua ${{ matrix.lua }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        lua: ["5.1", "5.2", "5.3", "5.4", "luajit-openresty"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: leafo/gh-actions-lua@v10
+        with:
+          luaVersion: ${{ matrix.lua }}
+
+      - uses: leafo/gh-actions-luarocks@v4
+
+      - name: Install busted
+        run: luarocks install busted
+
+      - name: Run tests
+        run: busted tests
+
+      - name: Run examples
+        run: |
+          lua examples/vector2d_example.lua
+          lua examples/vector3d_example.lua
+          lua examples/vector4d_example.lua
