@@ -33,7 +33,9 @@ jobs:
         run: busted tests
 
       - name: Run examples
+        # LuaJIT installs its interpreter as luajit instead of lua
         run: |
-          lua examples/vector2d_example.lua
-          lua examples/vector3d_example.lua
-          lua examples/vector4d_example.lua
+          LUA=$(command -v lua || command -v luajit)
+          for example in examples/*_example.lua; do
+              "$LUA" "$example"
+          done
