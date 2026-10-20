@@ -21,7 +21,10 @@ jobs:
         with:
           luaVersion: ${{ matrix.lua }}
 
+      # LuaRocks 3.12+ is needed for LuaJIT, older versions can't parse the luarocks.org manifest
       - uses: leafo/gh-actions-luarocks@v4
+        with:
+          luarocksVersion: "3.12.2"
 
       - name: Install busted
         run: luarocks install busted
